@@ -1,16 +1,18 @@
 var pool = require('./pool.js');
 
+
+let getREQResults = function(callback){
   pool.getConnection(function(err, connection){
-    connection.query('SELECT * FROM RS_REQUIREMENTS', function(err, results){
+    connection.query("SELECT * FROM RS_REQUIREMENTS WHERE REQUIREMENTS_STATUS='OPEN'", function(err, results){
       if(err) {
-        throw err;
+        return err;
       } else {
-         console.log(JSON.stringify(results));
+        connection.release();
+        callback(results);
       }
     });
-    connection.release();
-  });
+    
+  }); 
+}
 
-
-//module.exports.getRequirements = getRequirements;
-
+module.exports.getREQResults = getREQResults;
